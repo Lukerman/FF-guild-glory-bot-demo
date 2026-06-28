@@ -172,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($action === 'save_settings') {
-        $site_name = $_POST['site_name'] ?? 'Guild Glory Simulator';
+        $site_name = $_POST['site_name'] ?? 'Guild Glory';
         $expiry_duration = $_POST['expiry_duration_days'] ?? '30';
         $matrix = $_POST['matrix_background'] ?? '0';
         $sound = $_POST['sound_effects'] ?? '0';

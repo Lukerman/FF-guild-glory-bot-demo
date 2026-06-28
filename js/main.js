@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Step 4: Simulation
+    // Step 4: Deployment
     btnStartSim.addEventListener('click', async () => {
         showStep(4);
 
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "Loading Deployment Modules...",
             "Allocating Resources...",
             "Running Diagnostics...",
-            "Activating Simulation...",
+            "Activating Deployment...",
             "Finalizing Deployment...",
             "Operation Completed"
         ];

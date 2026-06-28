@@ -1,4 +1,4 @@
-# Guild Glory Simulator
+# Guild Glory
 
 A cyberpunk hacker-themed simulation website that visually simulates deploying virtual guild bots. The application is purely for entertainment and UI simulation. It does not connect to or modify any real game, account, server, or third-party service.
 

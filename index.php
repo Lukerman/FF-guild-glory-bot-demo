@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guild Glory Simulator</title>
+    <title>Guild Glory</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -62,10 +62,10 @@
                 <div class="plan-card" data-plan="16"><h3>16 Bots</h3></div>
                 <div class="plan-card" data-plan="32"><h3>32 Bots</h3></div>
             </div>
-            <button id="btn-start-sim" disabled>Start Simulation</button>
+            <button id="btn-start-sim" disabled>Start Deployment</button>
         </div>
 
-        <!-- Step 4: Simulation -->
+        <!-- Step 4: Deployment -->
         <div id="step-4" class="step glass-panel">
             <div class="flex justify-between items-center mb-2">
                 <h2>Deployment Sequence</h2>
@@ -80,13 +80,19 @@
 
         <!-- Step 5: Final Success Screen -->
         <div id="step-5" class="step glass-panel text-center">
-            <h2 class="terminal-success">SIMULATION COMPLETE</h2>
+            <h2 class="terminal-success">✅ Process Completed Successfully</h2>
             <div class="terminal" style="text-align: left; margin: 2rem 0;">
                 <div class="terminal-line">Guild ID: <span id="out-guild" class="terminal-info"></span></div>
                 <div class="terminal-line">Server: <span id="out-server" class="terminal-info"></span></div>
                 <div class="terminal-line">Plan: <span id="out-plan" class="terminal-info"></span></div>
                 <br>
-                <div class="terminal-line terminal-success">Status: Completed Successfully</div>
+                <div class="terminal-line">Your request has been submitted successfully.</div>
+                <br>
+                <div class="terminal-line">The Glory Bot will attempt to join the clan within 2–3 hours. Due to high demand and a large number of pending requests, processing may take longer than expected.</div>
+                <br>
+                <div class="terminal-line">If the bot does not join the clan, we apologize for the inconvenience. The service may be experiencing heavy usage and the bot could be temporarily busy handling other requests.</div>
+                <br>
+                <div class="terminal-line terminal-success">Thank you for your patience.</div>
             </div>
             <button onclick="location.reload()">Restart Terminal</button>
         </div>

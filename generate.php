@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Access Token - Guild Glory Simulator</title>
+    <title>Generate Access Token - Guild Glory</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate'])) {
     <div class="container">
         <div class="glass-panel text-center">
             <h2>Public Access Token Generator</h2>
-            <p style="margin-bottom: 20px; color: var(--text-dim);">Generate a token to access the simulator. Limit: 2 per day.</p>
+            <p style="margin-bottom: 20px; color: var(--text-dim);">Generate a token to access the deployment system. Limit: 2 per day.</p>
 
             <?php if ($message): ?>
                 <div class="terminal <?php echo $generatedKey ? 'terminal-success' : 'terminal-error'; ?>" style="margin-bottom: 20px;">
@@ -89,9 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate'])) {
 
             <form method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <!-- Use HTTP_X_CSRF_TOKEN simulation for traditional form post if api.php requires it, or just pass it in headers via js if we were using fetch.
-                     Since db.php verify_csrf expects HTTP_X_CSRF_TOKEN header, we should bypass verify_csrf or implement a workaround for form posts.
-                     Wait, verify_csrf in db.php checks $_SERVER['HTTP_X_CSRF_TOKEN']. Let's adjust verify_csrf or use JS to submit. -->
             </form>
 
             <button id="btn-generate-public">Generate Token</button>

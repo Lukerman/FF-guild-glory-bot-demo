@@ -68,7 +68,7 @@ try {
 
         // Insert default settings
         $settings = [
-            ['site_name', 'Guild Glory Simulator'],
+            ['site_name', 'Guild Glory'],
             ['expiry_duration_days', '30'],
             ['matrix_background', '1'],
             ['sound_effects', '1']

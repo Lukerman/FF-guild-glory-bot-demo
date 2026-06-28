@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Guild Glory Simulator</title>
+    <title>Admin - Guild Glory</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -107,7 +107,7 @@
                     <button id="btn-save-settings" class="btn-small">Save Settings</button>
                 </div>
 
-                <!-- Simulation Logs -->
+                <!-- Deployment Logs -->
                 <div class="glass-panel" style="flex:1;">
                     <h3>Recent Deployments</h3>
                     <div style="overflow-x:auto; max-height:400px;">
