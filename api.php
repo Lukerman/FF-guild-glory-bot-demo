@@ -123,13 +123,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // --- ADMIN ACTIONS (Require Authentication) ---
-    if (!isset($_SESSION['admin_id'])) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'Unauthorized']);
-        exit;
-    }
-
     if ($action === 'generate_key') {
         // Generate key GK-XXXX-XXXX-XXXX
         $parts = [];
@@ -151,6 +144,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(['success' => false, 'error' => 'Failed to generate key']);
         }
+        exit;
+    }
+
+    // --- ADMIN ACTIONS (Require Authentication) ---
+    if (!isset($_SESSION['admin_id'])) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Unauthorized']);
         exit;
     }
 
