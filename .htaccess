@@ -1,0 +1,17 @@
+# Protect the database directory from being accessed directly via browser
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^db/.*$ - [F]
+    RewriteRule ^error\.log$ - [F]
+</IfModule>
+
+# Alternatively, if mod_rewrite is disabled:
+<Directory "db">
+    Order Deny,Allow
+    Deny from all
+</Directory>
+
+<Files "error.log">
+    Order Allow,Deny
+    Deny from all
+</Files>

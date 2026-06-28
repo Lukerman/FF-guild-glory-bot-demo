@@ -1,7 +1,20 @@
 <?php
+// Enable basic error logging for the debugger
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/error.log');
+// For development, optionally display errors, but the debugger will read the log.
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
-$db_file = __DIR__ . '/db/guild_glory.sqlite';
+// Ensure the db directory exists
+$db_dir = __DIR__ . '/db';
+if (!is_dir($db_dir)) {
+    mkdir($db_dir, 0755, true);
+}
+
+$db_file = $db_dir . '/guild_glory.sqlite';
 $db_exists = file_exists($db_file);
 
 try {
