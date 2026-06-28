@@ -1,0 +1,334 @@
+:root {
+    --bg-color: #050505;
+    --text-main: #00ff00;
+    --text-dim: #008800;
+    --accent: #00ff00;
+    --glass-bg: rgba(0, 20, 0, 0.7);
+    --glass-border: rgba(0, 255, 0, 0.3);
+    --font-mono: 'Courier New', Courier, monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+#matrix-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0.4;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.glass-panel {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+    backdrop-filter: blur(5px);
+    margin-bottom: 2rem;
+}
+
+h1, h2, h3 {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px var(--accent);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--text-dim);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+button:hover {
+    background: var(--accent);
+    color: #000;
+    box-shadow: 0 0 15px var(--accent);
+}
+
+.btn-small {
+    width: auto;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+}
+
+.btn-danger {
+    border-color: #ff0000;
+    color: #ff0000;
+}
+.btn-danger:hover {
+    background: #ff0000;
+    color: #000;
+    box-shadow: 0 0 15px #ff0000;
+}
+
+/* Terminal Simulation */
+.terminal {
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--text-dim);
+    border-radius: 4px;
+    padding: 1rem;
+    font-family: var(--font-mono);
+    min-height: 200px;
+    margin-bottom: 1rem;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.terminal-line {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.terminal-success { color: #00ff00; }
+.terminal-error { color: #ff0000; }
+.terminal-info { color: #00aaaa; }
+
+.blinking-cursor::after {
+    content: '_';
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Plan Cards */
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.plan-card {
+    border: 1px solid var(--text-dim);
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.plan-card:hover, .plan-card.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+    background: rgba(0, 50, 0, 0.3);
+}
+
+.plan-card h3 {
+    margin-bottom: 0;
+}
+
+/* Progress Bar */
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background: #000;
+    border: 1px solid var(--text-dim);
+    border-radius: 4px;
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 0.8rem;
+    mix-blend-mode: difference;
+}
+
+/* Admin Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    background: rgba(0,0,0,0.6);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+th {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+tr:hover {
+    background: rgba(0, 255, 0, 0.05);
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 1.5rem;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    color: var(--accent);
+    text-shadow: 0 0 10px var(--accent);
+    margin-top: 0.5rem;
+}
+
+/* Steps control */
+.step {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Utilities */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.flex {
+    display: flex;
+}
+.justify-between {
+    justify-content: space-between;
+}
+.items-center {
+    align-items: center;
+}
+.mb-2 {
+    margin-bottom: 1rem;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.badge-active { background: #004400; color: #00ff00; border: 1px solid #00ff00; }
+.badge-used { background: #444400; color: #ffff00; border: 1px solid #ffff00; }
+.badge-expired { background: #440000; color: #ff0000; border: 1px solid #ff0000; }
+.badge-disabled { background: #444444; color: #aaaaaa; border: 1px solid #aaaaaa; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container, .admin-container {
+        padding: 1rem;
+    }
+
+    .glass-panel {
+        padding: 1.5rem;
+    }
+}
