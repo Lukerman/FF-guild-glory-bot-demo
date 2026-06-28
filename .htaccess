@@ -1,6 +1,10 @@
-# Protect the database directory from being accessed directly via browser
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Route /generate to generate.php
+    RewriteRule ^generate/?$ generate.php [L]
+
+    # Protect the database directory from being accessed directly via browser
     RewriteRule ^db/.*$ - [F]
     RewriteRule ^error\.log$ - [F]
 </IfModule>

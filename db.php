@@ -53,6 +53,12 @@ try {
                 setting_key TEXT UNIQUE NOT NULL,
                 setting_value TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS token_generation_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ip_address TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
         ");
 
         // Insert default admin: admin / admin123
@@ -83,7 +89,8 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 function verify_csrf() {
-    if (!isset($_SERVER['HTTP_X_CSRF_TOKEN']) || $_SERVER['HTTP_X_CSRF_TOKEN'] !== $_SESSION['csrf_token']) {
+    $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? $_POST['csrf_token'] ?? '';
+    if ($token !== $_SESSION['csrf_token']) {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
         exit;

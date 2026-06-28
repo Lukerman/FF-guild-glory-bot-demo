@@ -130,6 +130,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    if ($action === 'generate_key') {
+        // Generate key GK-XXXX-XXXX-XXXX
+        $parts = [];
+        for ($i=0; $i<3; $i++) {
+            $parts[] = strtoupper(substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 4));
+        }
+        $newKey = "GK-" . implode("-", $parts);
+
+        // Get expiry duration from settings
+        $stmt = $db->prepare("SELECT setting_value FROM settings WHERE setting_key = 'expiry_duration_days'");
+        $stmt->execute();
+        $days = (int)$stmt->fetchColumn() ?: 30;
+
+        $expiresAt = date('Y-m-d H:i:s', strtotime("+$days days"));
+
+        $stmt = $db->prepare("INSERT INTO access_keys (access_key, expires_at) VALUES (?, ?)");
+        if ($stmt->execute([$newKey, $expiresAt])) {
+            echo json_encode(['success' => true, 'key' => $newKey]);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Failed to generate key']);
+        }
+        exit;
+    }
+
     if ($action === 'toggle_key') {
         $id = $_POST['id'] ?? 0;
         $active = $_POST['active'] ?? 1;
@@ -182,40 +206,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 
-    // Public key generation endpoint
-    if ($action === 'generate_key') {
-        // Rate Limiting (Simple session-based)
-        $rate_limit_key = 'rate_limit_gen_key';
-        $time_now = time();
-        if (isset($_SESSION[$rate_limit_key]) && $time_now - $_SESSION[$rate_limit_key] < 2) { // 1 request per 2 seconds
-            http_response_code(429);
-            echo json_encode(['success' => false, 'error' => 'Too many requests. Please wait.']);
-            exit;
-        }
-        $_SESSION[$rate_limit_key] = $time_now;
-
-        // Generate key GK-XXXX-XXXX-XXXX
-        $parts = [];
-        for ($i=0; $i<3; $i++) {
-            $parts[] = strtoupper(substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 4));
-        }
-        $newKey = "GK-" . implode("-", $parts);
-
-        // Get expiry duration from settings
-        $stmt = $db->prepare("SELECT setting_value FROM settings WHERE setting_key = 'expiry_duration_days'");
-        $stmt->execute();
-        $days = (int)$stmt->fetchColumn() ?: 30;
-
-        $expiresAt = date('Y-m-d H:i:s', strtotime("+$days days"));
-
-        $stmt = $db->prepare("INSERT INTO access_keys (access_key, expires_at) VALUES (?, ?)");
-        if ($stmt->execute([$newKey, $expiresAt])) {
-            echo json_encode(['success' => true, 'key' => $newKey]);
-        } else {
-            echo json_encode(['success' => false, 'error' => 'Failed to generate key']);
-        }
-        exit;
-    }
 
     // --- ADMIN GET ACTIONS ---
     if (!isset($_SESSION['admin_id'])) {
