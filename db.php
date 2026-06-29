@@ -59,6 +59,13 @@ try {
                 ip_address TEXT NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
+
+            CREATE TABLE IF NOT EXISTS smartlink_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ip_address TEXT NOT NULL,
+                trigger_source TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
         ");
 
         // Insert default admin: admin / admin123
@@ -78,6 +85,34 @@ try {
         foreach ($settings as $s) {
             $stmt->execute([':key' => $s[0], ':val' => $s[1]]);
         }
+    }
+
+    // Database Migration / Updates for existing DBs
+
+    // 1. token_generation_log
+    $db->exec("CREATE TABLE IF NOT EXISTS token_generation_log (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ip_address TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )");
+
+    // 2. smartlink_logs
+    $db->exec("CREATE TABLE IF NOT EXISTS smartlink_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ip_address TEXT NOT NULL,
+        trigger_source TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )");
+
+    // 3. New Settings rows (smartlink)
+    $stmt = $db->prepare("INSERT OR IGNORE INTO settings (setting_key, setting_value) VALUES (:key, :val)");
+    $newSettings = [
+        ['smartlink_url', ''],
+        ['smartlink_enabled', '0'],
+        ['smartlink_triggers', '{"validate":false,"next":false,"start":false,"copy":false}']
+    ];
+    foreach ($newSettings as $s) {
+        $stmt->execute([':key' => $s[0], ':val' => $s[1]]);
     }
 } catch (PDOException $e) {
     die("Database Connection failed: " . $e->getMessage());

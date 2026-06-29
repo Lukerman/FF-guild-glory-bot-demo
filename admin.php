@@ -107,10 +107,36 @@
                     <button id="btn-save-settings" class="btn-small">Save Settings</button>
                 </div>
 
+                <!-- SmartLink Settings -->
+                <div class="glass-panel">
+                    <h3>SmartLink Configuration</h3>
+                    <div class="form-group">
+                        <label>SmartLink URL</label>
+                        <input type="text" id="set-smartlink-url" placeholder="https://example.com/ad">
+                    </div>
+                    <div class="form-group">
+                        <label>Enable SmartLink</label>
+                        <select id="set-smartlink-enabled">
+                            <option value="1">Enabled</option>
+                            <option value="0">Disabled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Trigger on Buttons:</label>
+                        <div style="margin-top: 5px;">
+                            <label style="display: inline-block; margin-right: 15px; color: var(--text-main); text-transform: none;"><input type="checkbox" id="trigger-validate"> Authenticate (Step 1)</label>
+                            <label style="display: inline-block; margin-right: 15px; color: var(--text-main); text-transform: none;"><input type="checkbox" id="trigger-next"> Next Step (Step 2)</label>
+                            <label style="display: inline-block; margin-right: 15px; color: var(--text-main); text-transform: none;"><input type="checkbox" id="trigger-start"> Start Deployment (Step 3)</label>
+                            <label style="display: inline-block; margin-right: 15px; color: var(--text-main); text-transform: none;"><input type="checkbox" id="trigger-copy"> Copy Key (Generate Page)</label>
+                        </div>
+                    </div>
+                    <button id="btn-save-smartlink" class="btn-small">Save SmartLink Settings</button>
+                </div>
+
                 <!-- Deployment Logs -->
                 <div class="glass-panel" style="flex:1;">
                     <h3>Recent Deployments</h3>
-                    <div style="overflow-x:auto; max-height:400px;">
+                    <div style="overflow-x:auto; max-height:200px;">
                         <table style="font-size:0.9rem;">
                             <thead>
                                 <tr>
@@ -122,6 +148,25 @@
                             </thead>
                             <tbody id="sims-table-body">
                                 <!-- Sims injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SmartLink Logs -->
+                <div class="glass-panel" style="flex:1;">
+                    <h3>SmartLink Clicks</h3>
+                    <div style="overflow-x:auto; max-height:200px;">
+                        <table style="font-size:0.9rem;">
+                            <thead>
+                                <tr>
+                                    <th>IP Address</th>
+                                    <th>Trigger Source</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody id="smartlink-table-body">
+                                <!-- Logs injected here -->
                             </tbody>
                         </table>
                     </div>

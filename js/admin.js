@@ -10,6 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('set-sound').value = data.data.sound_effects;
                     document.getElementById('set-site-name').value = data.data.site_name;
                     document.getElementById('set-expiry-duration').value = data.data.expiry_duration_days;
+
+                    document.getElementById('set-smartlink-url').value = data.data.smartlink_url;
+                    document.getElementById('set-smartlink-enabled').value = data.data.smartlink_enabled;
+
+                    try {
+                        const triggers = JSON.parse(data.data.smartlink_triggers);
+                        document.getElementById('trigger-validate').checked = triggers.validate;
+                        document.getElementById('trigger-next').checked = triggers.next;
+                        document.getElementById('trigger-start').checked = triggers.start;
+                        document.getElementById('trigger-copy').checked = triggers.copy;
+                    } catch(e) {}
                 }
             }
         });
@@ -54,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadStats();
         loadKeys();
         loadSims();
+        loadSmartLinkLogs();
 
         document.getElementById('btn-logout').addEventListener('click', async () => {
             await fetch('api.php?action=logout');
@@ -92,6 +104,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
             alert('Settings saved!');
             toggleMatrix(document.getElementById('set-matrix').value === '1');
+        });
+
+        document.getElementById('btn-save-smartlink').addEventListener('click', async () => {
+            const fd = new FormData();
+            fd.append('smartlink_url', document.getElementById('set-smartlink-url').value);
+            fd.append('smartlink_enabled', document.getElementById('set-smartlink-enabled').value);
+
+            const triggers = {
+                validate: document.getElementById('trigger-validate').checked,
+                next: document.getElementById('trigger-next').checked,
+                start: document.getElementById('trigger-start').checked,
+                copy: document.getElementById('trigger-copy').checked
+            };
+            fd.append('smartlink_triggers', JSON.stringify(triggers));
+
+            await fetch('api.php?action=save_smartlink', {
+                method: 'POST',
+                headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
+                body: fd
+            });
+
+            alert('SmartLink Settings saved!');
         });
     }
 
@@ -201,6 +235,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${escapeHTML(sim.server)}</td>
                     <td>${escapeHTML(sim.plan)}</td>
                     <td style="font-family:monospace; font-size:0.8rem;">${escapeHTML(sim.access_key)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    }
+
+    async function loadSmartLinkLogs() {
+        const res = await fetch('api.php?action=get_smartlink_logs');
+        const data = await res.json();
+
+        if (data.success) {
+            const tbody = document.getElementById('smartlink-table-body');
+            tbody.innerHTML = '';
+
+            data.data.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${escapeHTML(log.ip_address)}</td>
+                    <td>${escapeHTML(log.trigger_source)}</td>
+                    <td style="font-size:0.8rem;">${escapeHTML(log.created_at)}</td>
                 `;
                 tbody.appendChild(tr);
             });

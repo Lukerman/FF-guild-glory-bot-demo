@@ -6,7 +6,7 @@ $action = $_GET['action'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Only verify CSRF on state-changing actions
-    if ($action !== 'validate_key' && $action !== 'login') {
+    if ($action !== 'validate_key' && $action !== 'login' && $action !== 'log_smartlink') {
         verify_csrf();
     }
 
@@ -192,6 +192,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => true]);
         exit;
     }
+
+    if ($action === 'save_smartlink') {
+        $url = $_POST['smartlink_url'] ?? '';
+        $enabled = $_POST['smartlink_enabled'] ?? '0';
+        $triggers = $_POST['smartlink_triggers'] ?? '{"validate":false,"next":false,"start":false,"copy":false}';
+
+        $stmt = $db->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = 'smartlink_url'");
+        $stmt->execute([$url]);
+
+        $stmt = $db->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = 'smartlink_enabled'");
+        $stmt->execute([$enabled]);
+
+        $stmt = $db->prepare("UPDATE settings SET setting_value = ? WHERE setting_key = 'smartlink_triggers'");
+        $stmt->execute([$triggers]);
+
+        echo json_encode(['success' => true]);
+        exit;
+    }
+}
+
+// Public endpoint to log smartlink clicks
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'log_smartlink') {
+    // We don't require CSRF for logging the smartlink clicks so that it reliably fires
+    $source = $_POST['source'] ?? 'unknown';
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $stmt = $db->prepare("INSERT INTO smartlink_logs (ip_address, trigger_source) VALUES (?, ?)");
+    $stmt->execute([$ip, $source]);
+    echo json_encode(['success' => true]);
+    exit;
 }
 
 // GET Requests for data
@@ -250,6 +279,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $db->query("SELECT * FROM simulations ORDER BY created_at DESC LIMIT 50");
         $sims = $stmt->fetchAll();
         echo json_encode(['success' => true, 'data' => $sims]);
+        exit;
+    }
+
+    if ($action === 'get_smartlink_logs') {
+        $stmt = $db->query("SELECT * FROM smartlink_logs ORDER BY created_at DESC LIMIT 50");
+        $logs = $stmt->fetchAll();
+        echo json_encode(['success' => true, 'data' => $logs]);
         exit;
     }
 

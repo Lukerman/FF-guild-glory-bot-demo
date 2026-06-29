@@ -39,13 +39,17 @@
             <div class="form-group">
                 <label for="server-select">Server Region</label>
                 <select id="server-select">
+                    <option value="Global">Global</option>
                     <option value="India">India</option>
                     <option value="Singapore">Singapore</option>
                     <option value="Brazil">Brazil</option>
                     <option value="Europe">Europe</option>
+                    <option value="North America">North America</option>
+                    <option value="South America">South America</option>
                     <option value="Middle East">Middle East</option>
                     <option value="Thailand">Thailand</option>
                     <option value="Vietnam">Vietnam</option>
+                    <option value="Other available regions">Other available regions</option>
                 </select>
             </div>
             <button id="btn-next-plan">Next Step</button>

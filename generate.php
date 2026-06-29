@@ -1,17 +1,6 @@
 <?php
 require_once 'db.php';
 
-// First, we need to ensure the token_generation_log table exists just in case
-// the db was created before this update.
-try {
-    $db->exec("CREATE TABLE IF NOT EXISTS token_generation_log (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ip_address TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )");
-} catch (PDOException $e) {}
-
-
 $message = '';
 $generatedKey = '';
 
@@ -100,7 +89,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate'])) {
     </div>
 
     <script>
+        let smartlinkData = { enabled: false, url: '', triggers: {} };
+
+        function triggerSmartlink(source) {
+            if (smartlinkData.enabled && smartlinkData.url && smartlinkData.triggers[source]) {
+                window.open(smartlinkData.url, '_blank');
+                const fd = new FormData();
+                fd.append('source', source);
+                fetch('api.php?action=log_smartlink', {
+                    method: 'POST',
+                    body: fd
+                });
+            }
+        }
+
         function copyKey() {
+            triggerSmartlink('copy');
             const keyText = document.getElementById('generated-key-text').innerText;
             navigator.clipboard.writeText(keyText).then(() => {
                 alert('Access key copied to clipboard!');
@@ -115,6 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate'])) {
             .then(data => {
                 if (data.success) {
                     toggleMatrix(data.data.matrix_background === '1');
+                    if (data.data.smartlink_enabled === '1' && data.data.smartlink_url) {
+                        smartlinkData.enabled = true;
+                        smartlinkData.url = data.data.smartlink_url;
+                        try {
+                            smartlinkData.triggers = JSON.parse(data.data.smartlink_triggers);
+                        } catch(e) {}
+                    }
                 }
             });
 

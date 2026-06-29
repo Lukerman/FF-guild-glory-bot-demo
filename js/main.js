@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    let smartlinkData = { enabled: false, url: '', triggers: {} };
+
     // Load Settings
     fetch('api.php?action=get_settings')
         .then(res => res.json())
@@ -8,12 +10,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleMatrix(data.data.matrix_background === '1');
                 window.soundEnabled = data.data.sound_effects === '1';
 
+                if (data.data.smartlink_enabled === '1' && data.data.smartlink_url) {
+                    smartlinkData.enabled = true;
+                    smartlinkData.url = data.data.smartlink_url;
+                    try {
+                        smartlinkData.triggers = JSON.parse(data.data.smartlink_triggers);
+                    } catch(e) {}
+                }
+
                 const btnToggleSound = document.getElementById('btn-toggle-sound');
                 if (btnToggleSound) {
                     btnToggleSound.textContent = window.soundEnabled ? 'Mute Sound' : 'Enable Sound';
                 }
             }
         });
+
+    function triggerSmartlink(source) {
+        if (smartlinkData.enabled && smartlinkData.url && smartlinkData.triggers[source]) {
+            // Open link in new tab
+            window.open(smartlinkData.url, '_blank');
+            // Log the click
+            const fd = new FormData();
+            fd.append('source', source);
+            fetch('api.php?action=log_smartlink', {
+                method: 'POST',
+                body: fd
+            });
+        }
+    }
 
     const accessKeyInput = document.getElementById('access-key');
     const btnValidate = document.getElementById('btn-validate');
@@ -73,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Step 1: Validate Key
     btnValidate.addEventListener('click', async () => {
+        triggerSmartlink('validate');
         const key = accessKeyInput.value.trim();
         if (!key) return;
 
@@ -111,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Step 2: To Plan Selection
     btnNextPlan.addEventListener('click', () => {
+        triggerSmartlink('next');
         if (guildIdInput.value.trim() === '') {
             alert('Please enter Guild ID');
             return;
@@ -139,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Step 4: Deployment
     btnStartSim.addEventListener('click', async () => {
+        triggerSmartlink('start');
         showStep(4);
 
         const messages = [
