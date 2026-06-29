@@ -1,17 +1,19 @@
 # Guild Glory
 
-A cyberpunk hacker-themed simulation website that visually simulates deploying virtual guild bots. The application is purely for entertainment and UI simulation. It does not connect to or modify any real game, account, server, or third-party service.
+A cyberpunk hacker-themed website that visually simulates deploying virtual guild bots. The application is purely for entertainment. It does not connect to or modify any real game, account, server, or third-party service.
 
 ## Features
 
 *   **Cyberpunk Aesthetic:** Matrix-style animated background, falling green code rain, glowing effects, and a dark theme.
-*   **5-Step Simulation Flow:**
+*   **5-Step Deployment Flow:**
     1.  **Access Terminal:** Enter a valid access key.
     2.  **Guild Configuration:** Input Guild ID and select a server region.
-    3.  **Plan Selection:** Choose the number of bots to simulate.
+    3.  **Plan Selection:** Choose the number of bots to deploy.
     4.  **Deployment Sequence:** Animated terminal with progress bar and typing effects.
     5.  **Success Screen:** Final status with a confetti animation.
-*   **Admin Panel:** Manage access keys, view simulation logs, and configure settings.
+*   **Public Key Generator:** Users can generate their own access keys at `/generate`, with a built-in rate limit (max 2 keys per IP address per day).
+*   **SmartLink Integration:** Configurable ad links that can be triggered to open in a new tab when users click buttons in the UI.
+*   **Admin Panel:** Manage access keys, view deployment and SmartLink click logs, and configure site settings.
 *   **Single-Click Setup:** The SQLite database is automatically initialized on the first run.
 *   **Security:** Includes CSRF protection, password hashing, prepared statements to prevent SQL injection, output escaping for XSS prevention, and basic rate limiting.
 
@@ -38,4 +40,4 @@ A cyberpunk hacker-themed simulation website that visually simulates deploying v
 
 ## Disclaimer
 
-This application is a **SIMULATION ONLY**. It does not interact with any external systems, APIs, or games. It is designed for entertainment and UI demonstration purposes.
+This application is a **DEMONSTRATION ONLY**. It does not interact with any external systems, APIs, or games. It is designed for entertainment and UI demonstration purposes.
